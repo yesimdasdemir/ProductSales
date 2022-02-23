@@ -16,6 +16,13 @@
 		24DDAF6327C6AB5B009881AD /* ProductListViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DDAF6227C6AB5B009881AD /* ProductListViewControllerTests.swift */; };
 		24DDAF6D27C6AB5B009881AD /* ProductSalesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DDAF6C27C6AB5B009881AD /* ProductSalesUITests.swift */; };
 		24DDAF6F27C6AB5B009881AD /* ProductSalesUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DDAF6E27C6AB5B009881AD /* ProductSalesUITestsLaunchTests.swift */; };
+		24DDAF8327C6AEDB009881AD /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DDAF8227C6AEDB009881AD /* NetworkManager.swift */; };
+		24DDAF8A27C6B0C9009881AD /* ProductListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DDAF8427C6B0C9009881AD /* ProductListPresenter.swift */; };
+		24DDAF8B27C6B0C9009881AD /* ProductListWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DDAF8527C6B0C9009881AD /* ProductListWorker.swift */; };
+		24DDAF8C27C6B0C9009881AD /* ProductListRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DDAF8627C6B0C9009881AD /* ProductListRouter.swift */; };
+		24DDAF8D27C6B0C9009881AD /* ProductListModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DDAF8727C6B0C9009881AD /* ProductListModels.swift */; };
+		24DDAF8E27C6B0C9009881AD /* ProductListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DDAF8827C6B0C9009881AD /* ProductListViewController.swift */; };
+		24DDAF8F27C6B0C9009881AD /* ProductListInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DDAF8927C6B0C9009881AD /* ProductListInteractor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +56,13 @@
 		24DDAF6827C6AB5B009881AD /* ProductSalesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ProductSalesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		24DDAF6C27C6AB5B009881AD /* ProductSalesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductSalesUITests.swift; sourceTree = "<group>"; };
 		24DDAF6E27C6AB5B009881AD /* ProductSalesUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductSalesUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		24DDAF8227C6AEDB009881AD /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		24DDAF8427C6B0C9009881AD /* ProductListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListPresenter.swift; sourceTree = "<group>"; };
+		24DDAF8527C6B0C9009881AD /* ProductListWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListWorker.swift; sourceTree = "<group>"; };
+		24DDAF8627C6B0C9009881AD /* ProductListRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListRouter.swift; sourceTree = "<group>"; };
+		24DDAF8727C6B0C9009881AD /* ProductListModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListModels.swift; sourceTree = "<group>"; };
+		24DDAF8827C6B0C9009881AD /* ProductListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListViewController.swift; sourceTree = "<group>"; };
+		24DDAF8927C6B0C9009881AD /* ProductListInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListInteractor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -162,6 +176,12 @@
 		24DDAF7F27C6ABCB009881AD /* ProductList */ = {
 			isa = PBXGroup;
 			children = (
+				24DDAF8427C6B0C9009881AD /* ProductListPresenter.swift */,
+				24DDAF8527C6B0C9009881AD /* ProductListWorker.swift */,
+				24DDAF8627C6B0C9009881AD /* ProductListRouter.swift */,
+				24DDAF8727C6B0C9009881AD /* ProductListModels.swift */,
+				24DDAF8827C6B0C9009881AD /* ProductListViewController.swift */,
+				24DDAF8927C6B0C9009881AD /* ProductListInteractor.swift */,
 			);
 			name = ProductList;
 			sourceTree = "<group>";
@@ -179,6 +199,7 @@
 		24DDAF8127C6AC3C009881AD /* Network */ = {
 			isa = PBXGroup;
 			children = (
+				24DDAF8227C6AEDB009881AD /* NetworkManager.swift */,
 			);
 			name = Network;
 			sourceTree = "<group>";
@@ -314,8 +335,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				24DDAF8A27C6B0C9009881AD /* ProductListPresenter.swift in Sources */,
+				24DDAF8E27C6B0C9009881AD /* ProductListViewController.swift in Sources */,
+				24DDAF8C27C6B0C9009881AD /* ProductListRouter.swift in Sources */,
+				24DDAF8327C6AEDB009881AD /* NetworkManager.swift in Sources */,
+				24DDAF8D27C6B0C9009881AD /* ProductListModels.swift in Sources */,
 				24DDAF5027C6AB58009881AD /* ViewController.swift in Sources */,
+				24DDAF8B27C6B0C9009881AD /* ProductListWorker.swift in Sources */,
 				24DDAF4C27C6AB58009881AD /* AppDelegate.swift in Sources */,
+				24DDAF8F27C6B0C9009881AD /* ProductListInteractor.swift in Sources */,
 				24DDAF4E27C6AB58009881AD /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
