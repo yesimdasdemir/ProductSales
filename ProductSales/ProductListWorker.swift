@@ -10,8 +10,27 @@
 //  see http://clean-swift.com
 //
 
-import UIKit
+import Foundation
 
-final class ProductListWorker {
-
+struct ProductListRequest: RequestType {
+    typealias Response = ProductSales.GetProductList.Response
+    
+    var parameterQuery: [URLQueryItem] = []
+    
+    var path: String {
+        return "/ios-assignment/search"
+    }
+    
+    var httpMethod: HTTPMethod {
+        return .get
+    }
+    
+    var queryItems: [URLQueryItem]? {
+        get {
+            parameterQuery
+        }
+        set {
+            parameterQuery = newValue ?? []
+        }
+    }
 }

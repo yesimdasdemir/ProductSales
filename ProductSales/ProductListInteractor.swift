@@ -10,15 +10,44 @@
 //  see http://clean-swift.com
 //
 
-import UIKit
+import Foundation
 
 protocol ProductListBusinessLogic {
+    func getProductList(pageNo: Int)
 }
 
 protocol ProductListDataStore {
+    
 }
 
 final class ProductListInteractor: ProductListBusinessLogic, ProductListDataStore {
-  var presenter: ProductListPresentationLogic?
-  var worker: ProductListWorker?
+    var presenter: ProductListPresentationLogic?
+    var listRequest: ProductListRequest!
+    let network = Network()
+    
+    func getProductList(pageNo: Int) {
+        listRequest = ProductListRequest()
+        
+        let parameterDict: [String: String] = [
+            "query": "apple",
+            "page": "\(pageNo)"
+        ]
+        
+        for i in parameterDict {
+            listRequest.parameterQuery.append(URLQueryItem(name: i.key, value: i.value))
+        }
+        network.request(from: listRequest) { [weak self] result in
+            switch result {
+                case .success(let products):
+                    guard let products = products as? ProductSales.GetProductList.Response else {
+                      return
+                    }
+                    
+                    self?.presenter?.presentProductList(response: products)
+                    
+                case .failure(let error):
+                    print(error)
+            }
+        }
+    }
 }

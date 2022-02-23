@@ -13,10 +13,23 @@
 import UIKit
 
 protocol ProductListPresentationLogic {
-    
+    func presentProductList(response: ProductSales.GetProductList.Response)
 }
 
 final class ProductListPresenter: ProductListPresentationLogic {
   weak var viewController: ProductListDisplayLogic?
   
+    func presentProductList(response: ProductSales.GetProductList.Response) {
+        let singleItemViewModel = response.products.map { item in
+            SingleItemViewModel(id: item.productId,
+                                title: item.productName,
+                                subTitle: "deneme",
+                                imageLink: item.productImage)
+        }
+        
+        let productListViewModel = ProductSales.GetProductList.ViewModel(singleItemViewModel: singleItemViewModel,
+                                                                         pageNo: response.pageCount)
+        
+        viewController?.displayProductList(viewModel: productListViewModel)
+    }
 }

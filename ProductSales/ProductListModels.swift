@@ -13,39 +13,39 @@
 import UIKit
 
 enum ProductSales {
-  // MARK: Use cases
-  
-  enum GetProductList {
-    struct Request {
+    enum GetProductList {
+        struct Request {
+        }
+        
+        struct Response: Decodable {
+            let products: [ProductItem]
+            let currentPage: Int
+            let pageSize: Int
+            let totalResults: Int
+            let pageCount: Int
+        }
+        
+        struct ViewModel {
+            let singleItemViewModel: [SingleItemViewModel]
+            let pageNo: Int
+        }
     }
-      
-    struct Response {
-        let products: [ProductItem]
-        let currentPage: Int
-        let pageSize: Int
-        let totalResults: Int
-        let pageCount: Int
-    }
-      
-    struct ViewModel {
-    }
-  }
 }
 
+// MARK: ViewModels
 
 struct ProductItem: Decodable {
     let productId: Int?
     let productName: String?
     let productImage: String
-    let reviewInformation: [ReviewInformationItem]?
+    let reviewInformation: ReviewInformationItem?
     let availabilityState: Int?
     let nextDayDelivery: Bool
 }
 
 struct ReviewInformationItem: Decodable {
-    let reviewSummary: [ReviewSummaryItem]?
+    let reviewSummary: ReviewSummaryItem?
 }
-
 
 struct ReviewSummaryItem: Decodable {
     let reviewAverage: Double

@@ -13,44 +13,158 @@
 import UIKit
 
 protocol ProductListDisplayLogic: AnyObject {
-    
+    func displayProductList(viewModel: ProductSales.GetProductList.ViewModel)
 }
 
-final class ProductListViewController: UIViewController, ProductListDisplayLogic {
-  var interactor: ProductListBusinessLogic?
-  var router: (NSObjectProtocol & ProductListRoutingLogic & ProductListDataPassing)?
+final class ProductListViewController: UICollectionViewController, ProductListDisplayLogic {
+    var interactor: ProductListBusinessLogic?
+    var router: (NSObjectProtocol & ProductListRoutingLogic & ProductListDataPassing)?
+    
+    let searchController = UISearchController(searchResultsController: nil)
+    private let collectionViewItemHeight: CGFloat = 300
+    private var minimumLineSpacing: CGFloat = 15.0
+    private let pageNo = 1
+    
+    private var productItemList: [SingleItemViewModel] = []
+    private var filteredProducts: [SingleItemViewModel] = []
+    
+    private var isSearchBarEmpty: Bool {
+        return searchController.searchBar.text?.isEmpty ?? true
+    }
+    
+    private var isFiltering: Bool {
+        return searchController.isActive && !isSearchBarEmpty
+    }
+    
+    private var waiting: Bool = false
+    
+    // MARK: Object lifecycle
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        setup()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setup()
+    }
+    
+    // MARK: Setup
+    
+    private func setup() {
+        let viewController = self
+        let interactor = ProductListInteractor()
+        let presenter = ProductListPresenter()
+        let router = ProductListRouter()
+        viewController.interactor = interactor
+        viewController.router = router
+        interactor.presenter = presenter
+        presenter.viewController = viewController
+        router.viewController = viewController
+        router.dataStore = interactor
+    }
+    
+    // MARK: View lifecycle
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        setSearchViewController()
+        initCollectionView()
+        interactor?.getProductList(pageNo: pageNo)
+        prepareUI()
+    }
+    
+    // Internal Methods
+    
+    private func prepareUI() {
+        navigationItem.title = "Sales Product List"
+        collectionView.delegate = self
+        collectionView.dataSource = self
+    }
+    
+    private func setSearchViewController() {
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Products"
+        
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+        navigationItem.accessibilityScroll(.down)
+        definesPresentationContext = true
+    }
+    
+    private func filterContentForSearchText(_ searchText: String) {
+        filteredProducts = productItemList.filter { item -> Bool in
+            return (item.title?.lowercased().contains(searchText.lowercased()) ?? false)
+        }
+    }
+    
+    // MARK: Init CollectionView
+    
+    private func initCollectionView() {
+        let nibName = String(describing: CustomCollectionViewCell.self)
+        collectionView.register(UINib(nibName: nibName, bundle: Bundle(for: Self.self)), forCellWithReuseIdentifier: nibName)
+    }
+    
+    // MARK: Delegate Method
+    
+    func displayProductList(viewModel: ProductSales.GetProductList.ViewModel) {
+        productItemList = viewModel.singleItemViewModel
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.collectionView.reloadData()
+        }
+    }
+}
 
-  // MARK: Object lifecycle
-  
-  override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-    super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-    setup()
-  }
-  
-  required init?(coder aDecoder: NSCoder) {
-    super.init(coder: aDecoder)
-    setup()
-  }
-  
-  // MARK: Setup
-  
-  private func setup() {
-    let viewController = self
-    let interactor = ProductListInteractor()
-    let presenter = ProductListPresenter()
-    let router = ProductListRouter()
-    viewController.interactor = interactor
-    viewController.router = router
-    interactor.presenter = presenter
-    presenter.viewController = viewController
-    router.viewController = viewController
-    router.dataStore = interactor
-  }
-  
-  // MARK: View lifecycle
-  
-  override func viewDidLoad() {
-    super.viewDidLoad()
-  }
+extension ProductListViewController {
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if isFiltering {
+            return filteredProducts.count
+        }
+        return productItemList.count
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CustomCollectionViewCell", for: indexPath) as? CustomCollectionViewCell {
+            isFiltering
+            ? cell.configure(with: filteredProducts[indexPath.row])
+            : cell.configure(with: productItemList[indexPath.row])
+            
+            return cell
+        }
+        return UICollectionViewCell()
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        
+        if indexPath.row == productItemList.count - 1  && !waiting {
+            waiting = true;
+            loadMoreData()
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return minimumLineSpacing
+    }
+    
+    private func loadMoreData() {
+        interactor?.getProductList(pageNo: pageNo + 1)
+    }
+}
 
+extension ProductListViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        let searchBar = searchController.searchBar
+        filterContentForSearchText(searchBar.text!)
+        collectionView.reloadData()
+    }
+}
+
+extension ProductListViewController: UICollectionViewDelegateFlowLayout {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: (UIScreen.main.bounds.width / 2), height: collectionViewItemHeight)
+    }
 }
