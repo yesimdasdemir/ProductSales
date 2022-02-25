@@ -9,13 +9,13 @@ import UIKit
 
 final class CustomCollectionViewCell: UICollectionViewCell {
     
-    @IBOutlet private weak var singleItemView: SingleItemView!
+    @IBOutlet private weak var simpleItemView: SimpleItemView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
     }
 
-    public func configure(with model: SingleItemViewModel?) {
-        singleItemView?.viewModel = model
+    public func configure(with model: SimpleItemViewModel?) {
+        simpleItemView?.viewModel = model
     }
 }

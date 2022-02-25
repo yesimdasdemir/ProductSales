@@ -57,6 +57,8 @@ final class LoadingViewController: UIViewController {
     }
     
     func hideLoading() {
-        AlertUtils.shared.popAlert(alert: self)
+        DispatchQueue.main.async {
+            AlertUtils.shared.popAlert(alert: self)
+        }
     }
 }

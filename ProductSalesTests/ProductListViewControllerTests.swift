@@ -1,6 +1,6 @@
 //
-//  ProductSalesTests.swift
-//  ProductSalesTests
+//  ProductListViewControllerTests.swift
+//  ProductListViewControllerTests
 //
 //  Created by Yeşim Daşdemir on 23.02.2022.
 //
@@ -8,29 +8,101 @@
 import XCTest
 @testable import ProductSales
 
-class ProductSalesTests: XCTestCase {
-
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+final class ProductListViewControllerTests: XCTestCase {
+    var sut: ProductListViewController!
+    var window: UIWindow!
+    
+    // MARK: Test lifecycle
+    
+    override func setUp() {
+        super.setUp()
+        window = UIWindow()
+        setup()
     }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    
+    override func tearDown() {
+        window = nil
+        sut = nil
+        super.tearDown()
     }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+    
+    // MARK: Test setup
+    
+    func setup() {
+        let bundle = Bundle.main
+        let storyboard = UIStoryboard(name: "ProductList", bundle: bundle)
+        sut = storyboard.instantiateViewController(withIdentifier: "ProductListViewController") as? ProductListViewController
     }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+    
+    func loadView() {
+        window.addSubview(sut.view)
+        RunLoop.current.run(until: Date())
+    }
+    
+    // MARK: Spy
+    
+    final class ProductListBusinessLogicSpy: ProductListBusinessLogic {
+        var getProductListCalled = false
+        
+        func getProductList(pageNo: Int) {
+            getProductListCalled = true
         }
     }
-
+    
+    // MARK: Tests
+    
+    func testShouldDoSomethingWhenViewIsLoaded() {
+        // Given
+        let spy = ProductListBusinessLogicSpy()
+        sut.interactor = spy
+        
+        // When
+        loadView()
+        
+        // Then
+        XCTAssertNotNil(window)
+    }
+    
+    
+    func testViewDidLoad() {
+        // Given
+        let spy = ProductListBusinessLogicSpy()
+        sut.interactor = spy
+        
+        // When
+        sut.viewDidLoad()
+        
+        // Then
+        XCTAssertNotNil(sut.collectionView)
+        XCTAssertNotNil(sut.searchController)
+        XCTAssertEqual(sut.navigationItem.title, "Sales Product List")
+        XCTAssert(spy.getProductListCalled)
+    }
+    
+    func testDisplayProductList() {
+        // When
+        sut.displayProductList(viewModel: ProductSales.GetProductList.ViewModel(simpleItemViewModel: [SimpleItemViewModel(id: 1,
+                                                                                                                          title: "Apple",
+                                                                                                                          subTitle: "iPhone 12",
+                                                                                                                          imageWidth: "300",
+                                                                                                                          imageLink: nil)],
+                                                                                pageNo: 0))
+        
+        // Then
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: { [weak self] in
+            XCTAssertEqual(self?.sut.collectionView.numberOfItems(inSection: 0), 1)
+        })
+    }
+    
+    func testLoadMoreData() {
+        // Given
+        let spy = ProductListBusinessLogicSpy()
+        sut.interactor = spy
+        
+        // When
+        sut.collectionView(sut.collectionView, willDisplay: sut.collectionView.visibleCells.last ?? UICollectionViewCell(), forItemAt: IndexPath(row: 1, section: 0))
+        
+        // ThenU
+        XCTAssert(spy.getProductListCalled)
+    }
 }

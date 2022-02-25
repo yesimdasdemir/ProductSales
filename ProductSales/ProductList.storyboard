@@ -9,7 +9,7 @@
         <!--Product List View Controller-->
         <scene sceneID="5jD-sl-Ly5">
             <objects>
-                <collectionViewController storyboardIdentifier="MovieListViewController" id="8V3-Md-dL7" customClass="ProductListViewController" customModule="ProductSales" customModuleProvider="target" sceneMemberID="viewController">
+                <collectionViewController storyboardIdentifier="ProductListViewController" id="8V3-Md-dL7" customClass="ProductListViewController" customModule="ProductSales" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" showsHorizontalScrollIndicator="NO" dataMode="prototypes" id="2G1-uR-LHE">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

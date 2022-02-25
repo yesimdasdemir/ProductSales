@@ -21,12 +21,14 @@ final class ProductListViewController: UICollectionViewController, ProductListDi
     var router: (NSObjectProtocol & ProductListRoutingLogic & ProductListDataPassing)?
     
     let searchController = UISearchController(searchResultsController: nil)
-    private let collectionViewItemHeight: CGFloat = 300
-    private var minimumLineSpacing: CGFloat = 15.0
-    private let pageNo = 1
+    private let collectionViewSize = CGSize(width: (UIScreen.main.bounds.width / 2), height: 300)
+    private let emptySize = CGSize(width: UIScreen.main.bounds.width , height: 50)
+    private var minimumLineSpacing: CGFloat = 15
+    private var pageNo = 1
     
-    private var productItemList: [SingleItemViewModel] = []
-    private var filteredProducts: [SingleItemViewModel] = []
+    private var productItemList: [SimpleItemViewModel] = []
+    private var filteredProducts: [SimpleItemViewModel] = []
+    private var emptyViewModel: SimpleItemViewModel?
     
     private var isSearchBarEmpty: Bool {
         return searchController.searchBar.text?.isEmpty ?? true
@@ -70,9 +72,9 @@ final class ProductListViewController: UICollectionViewController, ProductListDi
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setSearchViewController()
         initCollectionView()
         interactor?.getProductList(pageNo: pageNo)
+        setSearchViewController()
         prepareUI()
     }
     
@@ -82,6 +84,8 @@ final class ProductListViewController: UICollectionViewController, ProductListDi
         navigationItem.title = "Sales Product List"
         collectionView.delegate = self
         collectionView.dataSource = self
+        
+        overrideUserInterfaceStyle = .light
     }
     
     private func setSearchViewController() {
@@ -111,17 +115,21 @@ final class ProductListViewController: UICollectionViewController, ProductListDi
     // MARK: Delegate Method
     
     func displayProductList(viewModel: ProductSales.GetProductList.ViewModel) {
-        productItemList = viewModel.singleItemViewModel
+        productItemList += viewModel.simpleItemViewModel
         
         DispatchQueue.main.async { [weak self] in
             self?.collectionView.reloadData()
         }
+        waiting = false
     }
 }
 
 extension ProductListViewController {
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if isFiltering {
+            guard !filteredProducts.isEmpty else {
+                return 1
+            }
             return filteredProducts.count
         }
         return productItemList.count
@@ -129,6 +137,11 @@ extension ProductListViewController {
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CustomCollectionViewCell", for: indexPath) as? CustomCollectionViewCell {
+            if isFiltering && filteredProducts.isEmpty {
+                let emptyViewModel = SimpleItemViewModel(title: "Sorry!", subTitleArray: ["We couldn't find any result."])
+                cell.configure(with: emptyViewModel)
+                return cell
+            }
             isFiltering
             ? cell.configure(with: filteredProducts[indexPath.row])
             : cell.configure(with: productItemList[indexPath.row])
@@ -158,13 +171,19 @@ extension ProductListViewController {
 extension ProductListViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         let searchBar = searchController.searchBar
-        filterContentForSearchText(searchBar.text!)
-        collectionView.reloadData()
+        
+        if let text = searchBar.text {
+            filterContentForSearchText(text)
+            collectionView.reloadData()
+        }
     }
 }
 
 extension ProductListViewController: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: (UIScreen.main.bounds.width / 2), height: collectionViewItemHeight)
+        if isFiltering && filteredProducts.isEmpty {
+            return emptySize
+        }
+        return collectionViewSize
     }
 }

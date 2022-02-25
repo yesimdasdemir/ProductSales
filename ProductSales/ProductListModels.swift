@@ -26,7 +26,7 @@ enum ProductSales {
         }
         
         struct ViewModel {
-            let singleItemViewModel: [SingleItemViewModel]
+            let simpleItemViewModel: [SimpleItemViewModel]
             let pageNo: Int
         }
     }

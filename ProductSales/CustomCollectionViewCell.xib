@@ -9,7 +9,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CustomCollectionViewCell" id="ZcY-rN-p8M" customClass="CustomCollectionViewCell" customModule="Tmdb" customModuleProvider="target">
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CustomCollectionViewCell" id="ZcY-rN-p8M" customClass="CustomCollectionViewCell" customModule="ProductSales" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="331" height="88"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -19,7 +19,7 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gtp-gl-SgZ">
                         <rect key="frame" x="0.0" y="0.0" width="331" height="88"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KlN-bo-6Si" customClass="SingleItemView" customModule="Tmdb" customModuleProvider="target">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KlN-bo-6Si" customClass="SimpleItemView" customModule="ProductSales" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="331" height="88"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
@@ -42,7 +42,7 @@
             </constraints>
             <size key="customSize" width="331" height="150"/>
             <connections>
-                <outlet property="singleItemView" destination="KlN-bo-6Si" id="e1q-cE-pb8"/>
+                <outlet property="simpleItemView" destination="KlN-bo-6Si" id="c0V-5I-bcd"/>
             </connections>
             <point key="canvasLocation" x="-28.260869565217394" y="101.78571428571428"/>
         </collectionViewCell>

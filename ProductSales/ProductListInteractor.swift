@@ -23,7 +23,7 @@ protocol ProductListDataStore {
 final class ProductListInteractor: ProductListBusinessLogic, ProductListDataStore {
     var presenter: ProductListPresentationLogic?
     var listRequest: ProductListRequest!
-    let network = Network()
+    let network = NetworkManager()
     
     func getProductList(pageNo: Int) {
         listRequest = ProductListRequest()
@@ -36,17 +36,22 @@ final class ProductListInteractor: ProductListBusinessLogic, ProductListDataStor
         for i in parameterDict {
             listRequest.parameterQuery.append(URLQueryItem(name: i.key, value: i.value))
         }
+        
+        LoadingViewController.shared.showLoading()
+        
         network.request(from: listRequest) { [weak self] result in
+            LoadingViewController.shared.hideLoading()
+            
             switch result {
                 case .success(let products):
                     guard let products = products as? ProductSales.GetProductList.Response else {
                       return
                     }
-                    
                     self?.presenter?.presentProductList(response: products)
                     
                 case .failure(let error):
-                    print(error)
+                    AlertUtils.shared.showAlert(title: "Error", message: error.localizedDescription)
+                    debugPrint(error)
             }
         }
     }

@@ -1,5 +1,5 @@
 //
-//  SingleItemView.swift
+//  SimpleItemView.swift
 //  ProductSales
 //
 //  Created by Yeşim Daşdemir on 23.02.2022.
@@ -7,14 +7,24 @@
 
 import UIKit
 
-final class SingleItemView: UIView {
+final class SimpleItemView: UIView {
     @IBOutlet private weak var contentView: UIView!
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var stackView: UIStackView!
     @IBOutlet private weak var titleLabel: UILabel!
-    @IBOutlet private weak var subTitleLabel: UILabel!
+    
+    // MARK: Variables
     
     private let cornerRadiusValue: CGFloat = 10.0
+    
+    private let subTitleLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont(name: "HelveticaNeue", size: 13)
+        label.numberOfLines = 1
+        label.textColor = .black
+        label.textAlignment = .center
+        return label
+    }()
     
     // MARK: Initialize methods
     
@@ -28,7 +38,7 @@ final class SingleItemView: UIView {
         loadNib()
     }
     
-    var viewModel: SingleItemViewModel? {
+    var viewModel: SimpleItemViewModel? {
         didSet {
             guard let viewModel = viewModel else {
                 return
@@ -37,16 +47,22 @@ final class SingleItemView: UIView {
         }
     }
     
-    private func initView(viewModel: SingleItemViewModel) {
-        if let imageLink = viewModel.imageLink, let url = URL(string: imageLink) {
-            imageView.setImage(url: url)
+    private func initView(viewModel: SimpleItemViewModel) {
+        if let imageLink = viewModel.imageLink {
+            imageView.loadImage(urlString: imageLink)
+        } else {
+            imageView.image = nil
         }
         
         imageView.layer.cornerRadius = cornerRadiusValue
         imageView.clipsToBounds = true
         
         titleLabel.text = viewModel.title
-        subTitleLabel.text = viewModel.subTitle
+        
+        viewModel.subTitleArray?.forEach({ item in
+            subTitleLabel.text = item
+            stackView.addArrangedSubview(subTitleLabel)
+        })
     }
     
     // MARK: LoadNib
