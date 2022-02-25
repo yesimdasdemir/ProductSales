@@ -21,6 +21,7 @@ final class AlertUtils {
                                      handler: nil)
         
         alert.addAction(okAction)
+        self.presentAlert(alert: alert, animated: true)
     }
     
     func presentAlert(alert: UIViewController, animated: Bool = true) {

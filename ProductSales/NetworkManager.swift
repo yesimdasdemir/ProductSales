@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import Reachability
+import UIKit
 
 enum HTTPMethod: String {
     case get
@@ -33,10 +35,9 @@ extension RequestType {
     }
 }
 
-final class Network {
+final class NetworkManager {
     
     func request<Request>(from request: Request, completion: @escaping (Result<Decodable, Error>) -> Void) where Request: RequestType {
-        
         var urlComponents = URLComponents()
         urlComponents.scheme = request.scheme
         urlComponents.host = request.host
@@ -71,6 +72,25 @@ final class Network {
             }
             
         }.resume()
+    }
+    
+    func checkNetworkStatus() -> Bool {
+        let reachability = try! Reachability()
+        let networkStatus = reachability.connection;
+        
+        var isAvailable  = false;
+        
+        switch networkStatus {
+            case .unavailable:
+                isAvailable = false
+               
+            case .wifi:
+                isAvailable = true
+                
+            case .cellular:
+                isAvailable = true
+        }
+        return isAvailable;
     }
 }
 
