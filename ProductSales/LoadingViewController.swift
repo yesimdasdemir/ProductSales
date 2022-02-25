@@ -37,23 +37,23 @@ final class LoadingViewController: UIViewController {
         return blurEffectView
     }()
     
-     func showLoading() {
+    func showLoading() {
         
         view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-
+        
         blurEffectView.frame = self.view.bounds
         view.insertSubview(blurEffectView, at: 0)
-
+        
         loadingActivityIndicator.center = CGPoint(
             x: view.bounds.midX,
             y: view.bounds.midY
         )
         view.addSubview(loadingActivityIndicator)
-         
-         modalPresentationStyle = .overCurrentContext
-         modalTransitionStyle = .crossDissolve
-         
-         AlertUtils.shared.presentAlert(alert: self, animated: false)
+        
+        modalPresentationStyle = .overCurrentContext
+        modalTransitionStyle = .crossDissolve
+        
+        AlertUtils.shared.presentAlert(alert: self, animated: false)
     }
     
     func hideLoading() {

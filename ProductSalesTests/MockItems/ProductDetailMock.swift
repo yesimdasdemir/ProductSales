@@ -19,5 +19,3 @@ final class ProductDetailMock {
                                                                             totalResults: 0,
                                                                             pageCount: 0)
 }
-
-

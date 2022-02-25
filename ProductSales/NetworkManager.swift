@@ -83,7 +83,7 @@ final class NetworkManager {
         switch networkStatus {
             case .unavailable:
                 isAvailable = false
-               
+                
             case .wifi:
                 isAvailable = true
                 
@@ -93,4 +93,3 @@ final class NetworkManager {
         return isAvailable;
     }
 }
-

@@ -17,19 +17,19 @@ protocol ProductListPresentationLogic {
 }
 
 final class ProductListPresenter: ProductListPresentationLogic {
-  weak var viewController: ProductListDisplayLogic?
-  
+    weak var viewController: ProductListDisplayLogic?
+    
     func presentProductList(response: ProductSales.GetProductList.Response) {
         var subTitleArray: [String] = []
-
+        
         let simpleItemViewModel = response.products.map { item -> SimpleItemViewModel in
             let availabilityState = "AvailabilityState:" + " " + "\(item.availabilityState ?? 0)"
             subTitleArray.append(availabilityState)
-
+            
             return SimpleItemViewModel(id: item.productId,
-                                title: item.productName,
-                                subTitleArray: subTitleArray,
-                                imageLink: item.productImage)
+                                       title: item.productName,
+                                       subTitleArray: subTitleArray,
+                                       imageLink: item.productImage)
         }
         
         let productListViewModel = ProductSales.GetProductList.ViewModel(simpleItemViewModel: simpleItemViewModel,
